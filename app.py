@@ -1,7 +1,7 @@
 """QR Studio Streamlit entrypoint."""
 
 from collections.abc import Mapping
-
+#streamlit
 import streamlit as st
 
 from qr_studio.api.qr_api import generate_qr_response
