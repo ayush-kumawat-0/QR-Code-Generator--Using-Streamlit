@@ -1230,24 +1230,32 @@ footer {
     margin-top: 12px;
 }
 
-#messageInput {
+#messageInput,
+#emailMessage,
+#smsMessage {
     width: 100%;
-    min-height: 46px;
-    padding: 0 14px;
+    min-height: 96px;
+    padding: 12px 14px;
     border: 1px solid var(--border);
     border-radius: 10px;
     background: var(--input);
     color: var(--text);
     outline: none;
     font: inherit;
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 1.45;
+    resize: vertical;
 }
 
-#messageInput::placeholder {
+#messageInput::placeholder,
+#emailMessage::placeholder,
+#smsMessage::placeholder {
     color: var(--muted);
 }
 
-#messageInput:focus {
+#messageInput:focus,
+#emailMessage:focus,
+#smsMessage:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(37, 35, 31, 0.08);
 }
@@ -1716,17 +1724,19 @@ footer {
 
                 <div class="mode" id="whatsappMode">
                     <div class="field">
-                        <label>WhatsApp Number</label>
-
-                        <div class="two-fields">
-                            <div class="phone-input">
-                                <span class="country-code">+91</span>
-
-                                <input id="phoneInput" type="tel" placeholder="98765 43210" inputmode="numeric"
-                                    maxlength="10">
+                        <div class="form-grid">
+                            <div class="full-width">
+                                <label for="phoneInput">WhatsApp Number</label>
+                                <div class="phone-input">
+                                    <span class="country-code">+91</span>
+                                    <input id="phoneInput" type="tel" placeholder="98765 43210" inputmode="numeric"
+                                        maxlength="10">
+                                </div>
                             </div>
-
-                            <input id="messageInput" type="text" placeholder="Write your message...">
+                            <div class="full-width">
+                                <label for="messageInput">Message</label>
+                                <textarea id="messageInput" placeholder="Write your message..."></textarea>
+                            </div>
                         </div>
 
                         <div class="helper">
@@ -1746,13 +1756,13 @@ footer {
                                 <label for="emailAddress">Email address</label>
                                 <input id="emailAddress" type="email" placeholder="name@example.com">
                             </div>
-                            <div>
+                            <div class="full-width">
                                 <label for="emailSubject">Subject</label>
                                 <input id="emailSubject" type="text" placeholder="Subject">
                             </div>
-                            <div>
+                            <div class="full-width">
                                 <label for="emailMessage">Message</label>
-                                <input id="emailMessage" type="text" placeholder="Your message">
+                                <textarea id="emailMessage" placeholder="Your message"></textarea>
                             </div>
                         </div>
                         <button class="primary" id="generateEmailBtn">
@@ -1765,13 +1775,13 @@ footer {
                 <div class="mode" id="smsMode">
                     <div class="field">
                         <div class="form-grid">
-                            <div>
+                            <div class="full-width">
                                 <label for="smsNumber">Phone number</label>
                                 <input id="smsNumber" type="tel" placeholder="+91 98765 43210">
                             </div>
-                            <div>
+                            <div class="full-width">
                                 <label for="smsMessage">Message</label>
-                                <input id="smsMessage" type="text" placeholder="Your message">
+                                <textarea id="smsMessage" placeholder="Your message"></textarea>
                             </div>
                         </div>
                         <button class="primary" id="generateSmsBtn">
