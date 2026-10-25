@@ -8,6 +8,7 @@ interface and a Python image-generation service.
 - Website and WhatsApp QR codes
 - Email, SMS, Wi-Fi, contact-card, and calendar-event QR codes
 - Custom colors, dot styles, and center logos
+- Adaptive QR image sizing to avoid UI layout shifts on long payloads
 - PNG download and image copy
 - Local browser history and light/dark themes
 - Responsive layout for desktop and mobile

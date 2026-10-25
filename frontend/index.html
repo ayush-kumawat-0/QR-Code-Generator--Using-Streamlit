@@ -581,6 +581,11 @@ label {
     margin-bottom: 8px;
 }
 
+.required-label::after {
+    content: " *";
+    color: var(--danger);
+}
+
 .input-row {
     display: flex;
     align-items: center;
@@ -595,6 +600,11 @@ label {
 .input-row:focus-within {
     border-color: var(--accent);
     box-shadow: 0 0 0 4px rgba(184, 92, 61, .08);
+}
+
+.invalid-field {
+    border-color: var(--danger) !important;
+    box-shadow: 0 0 0 3px rgba(185, 71, 71, 0.12);
 }
 
 .prefix {
@@ -889,16 +899,31 @@ select {
     padding: 28px 0 20px;
 }
 
+.qr-stage {
+    width: min(100%, 280px);
+}
+
 .qr-paper {
     width: 245px;
     height: 245px;
+    max-width: 100%;
     background: #fff;
     border-radius: 15px;
     padding: 10px;
     display: grid;
     place-items: center;
     box-shadow: 0 18px 42px rgba(40, 30, 20, .14);
+    overflow: hidden;
+    margin-inline: auto;
+}
 
+.generated-qr {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
 }
 
 .qr-placeholder {
@@ -984,7 +1009,9 @@ body.dark .qr-placeholder {
 }
 
 .payload div {
+    flex: 1 1 auto;
     min-width: 0;
+    overflow: hidden;
 }
 
 .payload small {
@@ -1258,6 +1285,24 @@ footer {
 #smsMessage:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(37, 35, 31, 0.08);
+}
+
+.field-error {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    color: var(--danger);
+    font-size: 11px;
+}
+
+.field-error.show {
+    display: flex;
+}
+
+.field-error::before {
+    content: "ⓘ";
+    font-size: 12px;
 }
 
 
@@ -1707,7 +1752,7 @@ footer {
                 <!-- URL -->
                 <div class="mode active" id="urlMode">
                     <div class="field">
-                        <label>Website URL</label>
+                        <label class="required-label" for="urlInput">Website URL</label>
 
                         <div class="input-row">
                             <input id="urlInput" type="url" placeholder="https://example.com">
@@ -1726,7 +1771,7 @@ footer {
                     <div class="field">
                         <div class="form-grid">
                             <div class="full-width">
-                                <label for="phoneInput">WhatsApp Number</label>
+                                <label class="required-label" for="phoneInput">WhatsApp Number</label>
                                 <div class="phone-input">
                                     <span class="country-code">+91</span>
                                     <input id="phoneInput" type="tel" placeholder="98765 43210" inputmode="numeric"
@@ -1753,7 +1798,7 @@ footer {
                     <div class="field">
                         <div class="form-grid">
                             <div class="full-width">
-                                <label for="emailAddress">Email address</label>
+                                <label class="required-label" for="emailAddress">Email address</label>
                                 <input id="emailAddress" type="email" placeholder="name@example.com">
                             </div>
                             <div class="full-width">
@@ -1776,7 +1821,7 @@ footer {
                     <div class="field">
                         <div class="form-grid">
                             <div class="full-width">
-                                <label for="smsNumber">Phone number</label>
+                                <label class="required-label" for="smsNumber">Phone number</label>
                                 <input id="smsNumber" type="tel" placeholder="+91 98765 43210">
                             </div>
                             <div class="full-width">
@@ -1795,7 +1840,7 @@ footer {
                     <div class="field">
                         <div class="form-grid">
                             <div>
-                                <label for="wifiName">Network name</label>
+                                <label class="required-label" for="wifiName">Network name</label>
                                 <input id="wifiName" type="text" placeholder="My Wi-Fi">
                             </div>
                             <div>
@@ -1822,7 +1867,7 @@ footer {
                     <div class="field">
                         <div class="form-grid">
                             <div>
-                                <label for="contactName">Full name</label>
+                                <label class="required-label" for="contactName">Full name</label>
                                 <input id="contactName" type="text" placeholder="Alex Morgan">
                             </div>
                             <div>
@@ -1853,15 +1898,15 @@ footer {
                     <div class="field">
                         <div class="form-grid">
                             <div class="full-width">
-                                <label for="calendarTitle">Event title</label>
+                                <label class="required-label" for="calendarTitle">Event title</label>
                                 <input id="calendarTitle" type="text" placeholder="Team meeting">
                             </div>
                             <div>
-                                <label for="calendarStart">Starts</label>
+                                <label class="required-label" for="calendarStart">Starts</label>
                                 <input id="calendarStart" type="datetime-local">
                             </div>
                             <div>
-                                <label for="calendarEnd">Ends</label>
+                                <label class="required-label" for="calendarEnd">Ends</label>
                                 <input id="calendarEnd" type="datetime-local">
                             </div>
                             <div class="full-width">
@@ -1955,7 +2000,7 @@ footer {
                 </div>
 
                 <div class="qr-area">
-                    <div>
+                    <div class="qr-stage">
                         <div class="qr-paper" id="qrPaper">
                             <div class="qr-placeholder">
                                 <div class="qr-placeholder-inner">
@@ -2088,6 +2133,7 @@ document.querySelectorAll(".type-btn").forEach(button => {
 
         document.querySelectorAll(".mode").forEach(mode => mode.classList.remove("active"));
         document.getElementById(currentMode + "Mode").classList.add("active");
+        clearAllValidationErrors();
         typesMore.setAttribute("aria-expanded", "false");
         typesOverflow.classList.remove("open");
     });
@@ -2107,23 +2153,102 @@ urlInput.addEventListener("input", () => {
     urlCount.textContent = urlInput.value.length;
 });
 
-function normaliseUrl(value) {
-    value = value.trim();
-
-    if (!value) return "";
-
-    // The UI no longer hard-codes a protocol.
-    // If the user enters example.com, Python receives https://example.com.
-    if (!/^https?:\/\//i.test(value)) {
-        value = "https://" + value;
+function getValidationAnchor(id) {
+    if (id === "urlInput") {
+        return document.querySelector("#urlMode .input-row");
     }
+    if (id === "phoneInput") {
+        return document.getElementById("phoneInput").closest(".phone-input");
+    }
+    return document.getElementById(id);
+}
 
-    try {
-        new URL(value);
-        return value;
-    } catch {
+function getErrorElement(id) {
+    let error = document.querySelector(`.field-error[data-error-for="${id}"]`);
+    if (error) {
+        return error;
+    }
+    const anchor = getValidationAnchor(id);
+    if (!anchor) {
+        return null;
+    }
+    error = document.createElement("div");
+    error.className = "field-error";
+    error.dataset.errorFor = id;
+    anchor.insertAdjacentElement("afterend", error);
+    return error;
+}
+
+function showFieldError(id, message) {
+    const anchor = getValidationAnchor(id);
+    const error = getErrorElement(id);
+    if (anchor) {
+        anchor.classList.add("invalid-field");
+    }
+    if (error) {
+        error.textContent = message;
+        error.classList.add("show");
+    }
+}
+
+function clearFieldError(id) {
+    const anchor = getValidationAnchor(id);
+    const error = document.querySelector(`.field-error[data-error-for="${id}"]`);
+    if (anchor) {
+        anchor.classList.remove("invalid-field");
+    }
+    if (error) {
+        error.classList.remove("show");
+        error.textContent = "";
+    }
+}
+
+function clearAllValidationErrors() {
+    document.querySelectorAll(".invalid-field").forEach(element => {
+        element.classList.remove("invalid-field");
+    });
+    document.querySelectorAll(".field-error.show").forEach(element => {
+        element.classList.remove("show");
+        element.textContent = "";
+    });
+}
+
+function requiredValue(id) {
+    const value = document.getElementById(id).value.trim();
+    if (!value) {
+        showFieldError(id, "Required field");
         return "";
     }
+    clearFieldError(id);
+    return value;
+}
+
+function validateHttpUrl(id) {
+    const value = requiredValue(id);
+    if (!value) {
+        return "";
+    }
+    if (!/^https?:\/\//i.test(value)) {
+        showFieldError(id, "URL must start with http:// or https://");
+        return "";
+    }
+    try {
+        new URL(value);
+        clearFieldError(id);
+        return value;
+    } catch {
+        showFieldError(id, "Enter a valid URL");
+        return "";
+    }
+}
+
+function isValidEmail(value) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function isValidPhone(value, minDigits, maxDigits) {
+    const digitsOnly = value.replace(/\D/g, "");
+    return digitsOnly.length >= minDigits && digitsOnly.length <= maxDigits;
 }
 
 /* PAYLOAD */
@@ -2143,6 +2268,17 @@ function setPayload(payload, title) {
     showToast("Content ready");
 }
 
+function renderGeneratedQR(imageUrl, altText) {
+    qrPaper.innerHTML = `
+        <img
+            src="${imageUrl}"
+            alt="${altText}"
+            id="generatedQR"
+            class="generated-qr"
+        >
+    `;
+}
+
 /* GENERATE BUTTONS */
 
 
@@ -2153,29 +2289,14 @@ function setPayload(payload, title) {
 
 document.getElementById("generateBtn").addEventListener("click", async () => {
 
-    const url = normaliseUrl(urlInput.value);
-
+    const url = validateHttpUrl("urlInput");
     if (!url) {
-        showToast("Enter a valid website URL");
         return;
     }
 
     try {
-                const imageUrl = await requestQR(url);
-
-        qrPaper.innerHTML = `
-            <img
-                src="${imageUrl}"
-                alt="Generated QR Code"
-                id="generatedQR"
-                style="
-                    width: 100%;
-                    height: 100%;
-                    object-fit: contain;
-                    display: block;
-                "
-            >
-        `;
+        const imageUrl = await requestQR(url);
+        renderGeneratedQR(imageUrl, "Generated QR Code");
 
         // Update encoded content
         setPayload(url, "Website QR");
@@ -2204,12 +2325,15 @@ document.getElementById("generateBtn").addEventListener("click", async () => {
 
 document.getElementById("generateWhatsappBtn").addEventListener("click", async () => {
 
-    const number = phoneInput.value;
-
-    if (number.length !== 10) {
-        showToast("Enter a valid 10-digit WhatsApp number");
+    const number = requiredValue("phoneInput");
+    if (!number) {
         return;
     }
+    if (!/^\d{10}$/.test(number)) {
+        showFieldError("phoneInput", "Enter a valid 10-digit mobile number");
+        return;
+    }
+    clearFieldError("phoneInput");
 
     const phone = "91" + number;
 
@@ -2223,23 +2347,8 @@ document.getElementById("generateWhatsappBtn").addEventListener("click", async (
         (message ? "?text=" + message : "");
 
     try {
-
-                const imageUrl = await requestQR(payload);
-
-        qrPaper.innerHTML = `
-            <img
-                src="${imageUrl}"
-                alt="Generated WhatsApp QR Code"
-                id="generatedQR"
-                style="
-                    width: 100%;
-                    height: 100%;
-                    object-fit: contain;
-                    display: block;
-                    margin: 0 auto;
-                "
-            >
-        `;
+        const imageUrl = await requestQR(payload);
+        renderGeneratedQR(imageUrl, "Generated WhatsApp QR Code");
 
         currentQRImage = imageUrl;
 
@@ -2267,19 +2376,7 @@ document.getElementById("generateWhatsappBtn").addEventListener("click", async (
 
 function finishGeneratedQR(payload, type, altText, previewText) {
     return requestQR(payload).then(imageUrl => {
-        qrPaper.innerHTML = `
-            <img
-                src="${imageUrl}"
-                alt="${altText}"
-                id="generatedQR"
-                style="
-                    width: 100%;
-                    height: 100%;
-                    object-fit: contain;
-                    display: block;
-                "
-            >
-        `;
+        renderGeneratedQR(imageUrl, altText);
 
         currentQRImage = imageUrl;
         setPayload(payload, type + " QR");
@@ -2294,15 +2391,6 @@ function finishGeneratedQR(payload, type, altText, previewText) {
 function handleGenerationError(error) {
     console.error(error);
     showToast("Failed to generate QR");
-}
-
-function requiredValue(id, message) {
-    const value = document.getElementById(id).value.trim();
-    if (!value) {
-        showToast(message);
-        return "";
-    }
-    return value;
 }
 
 function encodeQuery(parameters) {
@@ -2328,8 +2416,13 @@ function calendarDate(value) {
 }
 
 document.getElementById("generateEmailBtn").addEventListener("click", () => {
-    const address = requiredValue("emailAddress", "Enter an email address");
+    const address = requiredValue("emailAddress");
     if (!address) return;
+    if (!isValidEmail(address)) {
+        showFieldError("emailAddress", "Enter a valid email address");
+        return;
+    }
+    clearFieldError("emailAddress");
 
     const payload = "mailto:" + address + "?" + encodeQuery({
         subject: document.getElementById("emailSubject").value.trim(),
@@ -2345,9 +2438,14 @@ document.getElementById("generateEmailBtn").addEventListener("click", () => {
 });
 
 document.getElementById("generateSmsBtn").addEventListener("click", () => {
-    const number = requiredValue("smsNumber", "Enter a phone number");
+    const number = requiredValue("smsNumber");
     const message = document.getElementById("smsMessage").value.trim();
     if (!number) return;
+    if (!/^\+?[0-9\s\-()]+$/.test(number) || !isValidPhone(number, 7, 15)) {
+        showFieldError("smsNumber", "Enter a valid phone number");
+        return;
+    }
+    clearFieldError("smsNumber");
 
     const payload = "SMSTO:" + number.replace(/[^\d+]/g, "") + ":" + message;
     finishGeneratedQR(
@@ -2359,14 +2457,16 @@ document.getElementById("generateSmsBtn").addEventListener("click", () => {
 });
 
 document.getElementById("generateWifiBtn").addEventListener("click", () => {
-    const name = requiredValue("wifiName", "Enter the Wi-Fi network name");
+    const name = requiredValue("wifiName");
     const security = document.getElementById("wifiSecurity").value;
-    const password = document.getElementById("wifiPassword").value;
+    const password = document.getElementById("wifiPassword").value.trim();
     if (!name) return;
+    clearFieldError("wifiName");
     if (security !== "nopass" && !password) {
-        showToast("Enter the Wi-Fi password");
+        showFieldError("wifiPassword", "Required field");
         return;
     }
+    clearFieldError("wifiPassword");
 
     const payload = `WIFI:T:${security};S:${escapeStructuredValue(name)};P:${escapeStructuredValue(password)};;`;
     finishGeneratedQR(
@@ -2378,17 +2478,50 @@ document.getElementById("generateWifiBtn").addEventListener("click", () => {
 });
 
 document.getElementById("generateContactBtn").addEventListener("click", () => {
-    const name = requiredValue("contactName", "Enter a contact name");
+    const name = requiredValue("contactName");
     if (!name) return;
+    clearFieldError("contactName");
+
+    const contactEmail = document.getElementById("contactEmail").value.trim();
+    const contactPhone = document.getElementById("contactPhone").value.trim();
+    const contactWebsite = document.getElementById("contactWebsite").value.trim();
+
+    if (contactEmail && !isValidEmail(contactEmail)) {
+        showFieldError("contactEmail", "Enter a valid email address");
+        return;
+    }
+    clearFieldError("contactEmail");
+
+    if (contactPhone && (!/^\+?[0-9\s\-()]+$/.test(contactPhone) || !isValidPhone(contactPhone, 7, 15))) {
+        showFieldError("contactPhone", "Enter a valid phone number");
+        return;
+    }
+    clearFieldError("contactPhone");
+
+    if (contactWebsite) {
+        if (!/^https?:\/\//i.test(contactWebsite)) {
+            showFieldError("contactWebsite", "URL must start with http:// or https://");
+            return;
+        }
+        try {
+            new URL(contactWebsite);
+            clearFieldError("contactWebsite");
+        } catch {
+            showFieldError("contactWebsite", "Enter a valid URL");
+            return;
+        }
+    } else {
+        clearFieldError("contactWebsite");
+    }
 
     const payload = [
         "BEGIN:VCARD",
         "VERSION:3.0",
         "FN:" + escapeStructuredValue(name),
-        "TEL:" + escapeStructuredValue(document.getElementById("contactPhone").value.trim()),
-        "EMAIL:" + escapeStructuredValue(document.getElementById("contactEmail").value.trim()),
+        "TEL:" + escapeStructuredValue(contactPhone),
+        "EMAIL:" + escapeStructuredValue(contactEmail),
         "ORG:" + escapeStructuredValue(document.getElementById("contactOrganization").value.trim()),
-        "URL:" + escapeStructuredValue(document.getElementById("contactWebsite").value.trim()),
+        "URL:" + escapeStructuredValue(contactWebsite),
         "END:VCARD"
     ].join("\r\n");
 
@@ -2401,21 +2534,22 @@ document.getElementById("generateContactBtn").addEventListener("click", () => {
 });
 
 document.getElementById("generateCalendarBtn").addEventListener("click", () => {
-    const title = requiredValue("calendarTitle", "Enter an event title");
-    const startValue = document.getElementById("calendarStart").value;
-    const endValue = document.getElementById("calendarEnd").value;
+    const title = requiredValue("calendarTitle");
+    const startValue = requiredValue("calendarStart");
+    const endValue = requiredValue("calendarEnd");
     if (!title) return;
-    if (!startValue || !endValue) {
-        showToast("Choose start and end times");
-        return;
-    }
+    if (!startValue || !endValue) return;
+    clearFieldError("calendarTitle");
+    clearFieldError("calendarStart");
+    clearFieldError("calendarEnd");
 
     const start = calendarDate(startValue);
     const end = calendarDate(endValue);
     if (!start || !end || new Date(endValue) <= new Date(startValue)) {
-        showToast("End time must be after start time");
+        showFieldError("calendarEnd", "End time must be after start time");
         return;
     }
+    clearFieldError("calendarEnd");
 
     const payload = [
         "BEGIN:VCALENDAR",
@@ -2496,11 +2630,46 @@ document.getElementById("copyImageBtn").addEventListener("click", async () => {
 
 
 const phoneInput = document.getElementById("phoneInput");
+const validationFieldIds = [
+    "urlInput",
+    "phoneInput",
+    "emailAddress",
+    "smsNumber",
+    "wifiName",
+    "wifiPassword",
+    "contactName",
+    "contactPhone",
+    "contactEmail",
+    "contactWebsite",
+    "calendarTitle",
+    "calendarStart",
+    "calendarEnd"
+];
 
 phoneInput.addEventListener("input", () => {
     phoneInput.value = phoneInput.value
         .replace(/\D/g, "")
         .slice(0, 10);
+});
+
+validationFieldIds.forEach(id => {
+    const element = document.getElementById(id);
+    if (!element) {
+        return;
+    }
+    const eventName = element.tagName === "SELECT" ? "change" : "input";
+    element.addEventListener(eventName, () => {
+        clearFieldError(id);
+        if (id === "calendarStart" || id === "calendarEnd") {
+            clearFieldError("calendarEnd");
+        }
+    });
+});
+
+document.getElementById("wifiSecurity").addEventListener("change", () => {
+    if (document.getElementById("wifiSecurity").value === "nopass") {
+        clearFieldError("wifiPassword");
+    }
 });
 
 
@@ -2512,6 +2681,7 @@ document.getElementById("pasteBtn").addEventListener("click", async () => {
         if (text) {
             urlInput.value = text;
             urlCount.textContent = text.length;
+            clearFieldError("urlInput");
             showToast("URL pasted");
         }
     } catch {

@@ -13,6 +13,13 @@ from qrcode.image.styles.moduledrawers import CircleModuleDrawer, RoundedModuleD
 from .errors import InvalidRequestError
 
 
+def _adaptive_box_size(matrix_size: int) -> int:
+    if matrix_size <= 0:
+        return 10
+    target_pixels = 960
+    return max(2, min(10, target_pixels // matrix_size))
+
+
 def _hex_rgb(value: str) -> tuple[int, int, int]:
     raw = (value or "").lstrip("#")
     if len(raw) != 6:
@@ -54,11 +61,12 @@ def generate_png(
     qr = qrcode.QRCode(
         version=None,
         error_correction=qrcode.constants.ERROR_CORRECT_H,
-        box_size=10,
+        box_size=1,
         border=1,
     )
     qr.add_data(content)
     qr.make(fit=True)
+    qr.box_size = _adaptive_box_size(len(qr.get_matrix()))
 
     if dot_style == "rounded":
         image = qr.make_image(
