@@ -1773,7 +1773,9 @@
             flex: 0 0 auto;
             width: 38px;
             height: 38px;
-            place-items: center;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
             gap: 4px;
             padding: 9px;
             border: 1px solid var(--border);
@@ -1786,6 +1788,7 @@
             display: block;
             width: 16px;
             height: 2px;
+            flex: 0 0 2px;
             border-radius: 999px;
             background: currentColor;
             transition: transform .2s, opacity .2s;
@@ -2835,6 +2838,235 @@
             }
         }
 
+        @media (max-width: 600px) {
+            header {
+                height: 60px;
+                top: 8px;
+                padding: 0 9px;
+                gap: 6px;
+                border-radius: 16px;
+            }
+
+            .brand {
+                min-width: 0;
+                gap: 8px;
+                order: 1;
+            }
+
+            .brand-name {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                font-size: 16px;
+            }
+
+            .logo {
+                flex: 0 0 34px;
+                width: 34px;
+                height: 34px;
+                border-radius: 10px;
+            }
+
+            .header-actions {
+                gap: 5px;
+                margin-left: auto;
+                order: 2;
+            }
+
+            .history-btn,
+            .theme-btn,
+            .nav-toggle {
+                width: 34px;
+                height: 34px;
+                justify-content: center;
+                padding: 0;
+                border-radius: 10px;
+            }
+
+            .history-btn span,
+            .theme-btn #themeLabel {
+                display: none;
+            }
+
+            .theme-icon {
+                width: 20px;
+                height: 20px;
+            }
+
+            .nav-toggle {
+                order: 3;
+            }
+
+            .nav-links {
+                top: calc(100% + 8px);
+                right: 0;
+                left: auto;
+                width: min(230px, calc(100vw - 20px));
+                padding: 7px;
+                border-radius: 14px;
+            }
+
+            .nav-links a {
+                padding: 11px 12px;
+            }
+
+            .hero {
+                padding: 28px 2px 14px;
+            }
+
+            .hero h1 {
+                margin-top: 13px;
+                font-size: clamp(34px, 10.8vw, 48px);
+                line-height: 1.04;
+            }
+
+            .hero p {
+                max-width: 320px;
+                margin-top: 14px;
+            }
+
+            .hero-points {
+                gap: 8px 14px;
+                margin-top: 17px;
+                font-size: 10px;
+            }
+
+            .hero-art {
+                min-height: 178px;
+                transform: none;
+                margin-top: 4px;
+                margin-bottom: -30px;
+            }
+
+            .hero-qr-wrap {
+                width: 148px;
+                height: 148px;
+            }
+
+            .hero-qr-card {
+                width: 148px;
+                padding: 11px;
+                border-radius: 18px;
+                transform: rotate(4deg);
+            }
+
+            .hero-spark-lines {
+                top: -12px;
+                right: -17px;
+            }
+
+            .chip-email,
+            .chip-contact,
+            .chip-calendar {
+                display: none;
+            }
+
+            .float-chip {
+                padding: 7px 10px;
+                font-size: 10px;
+            }
+
+            .float-chip .chip-icon {
+                width: 19px;
+                height: 19px;
+            }
+
+            .float-chip .chip-icon svg {
+                width: 12px;
+                height: 12px;
+            }
+
+            .chip-website {
+                top: 18px;
+                left: 2%;
+            }
+
+            .chip-whatsapp {
+                top: 116px;
+                left: 4%;
+            }
+
+            .chip-wifi {
+                top: 37px;
+                right: 2%;
+            }
+
+            .workspace {
+                margin-top: 18px;
+                margin-bottom: 30px;
+            }
+
+            .panel,
+            .preview {
+                border-radius: 16px;
+            }
+
+            .panel .title,
+            .preview .title {
+                font-size: 21px;
+            }
+
+            .panel .subtitle,
+            .preview .subtitle {
+                font-size: 13px;
+            }
+
+            .panel label,
+            .preview label {
+                font-size: 12px;
+            }
+
+            .panel input,
+            .panel textarea,
+            .panel select,
+            .preview input,
+            .preview textarea,
+            .preview select {
+                font-size: 14px;
+            }
+
+            .panel .primary,
+            .panel .paste,
+            .preview button {
+                font-size: 13px;
+            }
+
+            .types {
+                grid-template-columns: repeat(3, minmax(0, 1fr)) 38px;
+                gap: 4px;
+                padding: 5px;
+            }
+
+            .type-btn {
+                min-height: 44px;
+                gap: 5px;
+                padding: 6px 5px;
+                font-size: 11px;
+            }
+
+            .type-btn .type-icon {
+                flex-basis: 26px;
+                width: 26px;
+                height: 26px;
+            }
+
+            .type-icon svg {
+                width: 17px;
+                height: 17px;
+            }
+
+            .types-more {
+                width: 38px;
+                min-height: 44px;
+            }
+        }
+
+        @media (min-width: 430px) and (max-width: 600px) {
+            .types {
+                grid-template-columns: repeat(4, minmax(0, 1fr)) 38px;
+            }
+        }
+
     </style>
     <style id="qr-scroll">
         html {
@@ -2873,11 +3105,11 @@
             </button>
 
             <div class="header-actions">
-                <button class="history-btn" id="historyBtn">
+                <button class="history-btn" id="historyBtn" type="button" aria-label="Open recent QR codes" title="Recent QR codes">
                     <span>Recent</span> ↺
                 </button>
 
-                <button class="theme-btn" id="themeBtn">
+                <button class="theme-btn" id="themeBtn" type="button" aria-label="Toggle color theme" title="Toggle color theme">
                     <span class="theme-icon" id="themeIcon">☾</span>
                     <span id="themeLabel">Dark</span>
                 </button>
@@ -3660,6 +3892,32 @@
         let currentQRImage = "";
         const typesMore = document.querySelector(".types-more");
         const typesOverflow = document.querySelector(".types-overflow");
+        const typesContainer = document.querySelector(".types");
+        const typeButtons = Array.from(document.querySelectorAll(".types .type-btn"));
+
+        function syncTypeOptions() {
+            const isPhone = window.matchMedia("(max-width: 600px)").matches;
+            const visibleModes = isPhone
+                ? (window.innerWidth < 430
+                    ? ["url", "whatsapp", "email"]
+                    : ["url", "whatsapp", "email", "sms"])
+                : ["url", "whatsapp", "email", "sms", "wifi"];
+
+            typeButtons.forEach(button => {
+                const target = visibleModes.includes(button.dataset.mode)
+                    ? typesContainer
+                    : typesOverflow;
+
+                if (target === typesContainer) {
+                    typesContainer.insertBefore(button, typesMore);
+                } else {
+                    typesOverflow.appendChild(button);
+                }
+            });
+        }
+
+        syncTypeOptions();
+        window.addEventListener("resize", syncTypeOptions);
 
         typesMore.addEventListener("click", event => {
             event.stopPropagation();
