@@ -397,11 +397,14 @@ header {
 /* CONTENT TYPE */
 
 .types {
+    position: relative;
     display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr)) 42px;
+    align-items: center;
     gap: 4px;
     margin-top: 25px;
     padding: 4px;
+    overflow: visible;
     background: color-mix(in srgb, var(--surface) 88%, var(--card));
     border: 1px solid var(--border);
     border-radius: 14px;
@@ -409,28 +412,63 @@ header {
 
 .type-btn {
     min-width: 0;
-    grid-column: span 3;
+    width: 100%;
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     border: 0;
     background: transparent;
     color: var(--muted);
-    padding: 9px 7px;
+    padding: 6px 8px;
     border-radius: 10px;
     font-size: 11.5px;
     font-weight: 600;
+    white-space: nowrap;
     transition: .2s;
 }
 
 .type-btn .type-icon {
-    display: inline-grid;
-    width: 20px;
-    height: 20px;
-    margin-right: 5px;
+    display: grid;
+    flex: 0 0 28px;
+    width: 28px;
+    height: 28px;
     place-items: center;
-    vertical-align: middle;
+    color: currentColor;
     border: 1px solid currentColor;
-    border-radius: 50%;
-    font-size: 10px;
-    opacity: .8;
+    border-radius: 8px;
+    opacity: .9;
+}
+
+.type-icon svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+}
+
+.type-btn[data-mode="whatsapp"],
+.type-btn[data-mode="email"] {
+    gap: 4px;
+    padding-inline: 4px;
+    font-size: 10.5px;
+}
+
+.type-btn[data-mode="whatsapp"] .type-icon,
+.type-btn[data-mode="email"] .type-icon {
+    flex-basis: 25px;
+    width: 25px;
+    height: 25px;
+}
+
+.type-btn[data-mode="whatsapp"] .type-icon svg,
+.type-btn[data-mode="email"] .type-icon svg {
+    width: 17px;
+    height: 17px;
 }
 
 .type-btn.active {
@@ -444,16 +482,81 @@ header {
     background: color-mix(in srgb, var(--card) 55%, transparent);
 }
 
-.type-btn:nth-child(5) {
-    grid-column: 2 / span 3;
+.types-more {
+    width: 42px;
+    min-height: 42px;
+    align-self: stretch;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-left: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    border-radius: 0 10px 10px 0;
+    transition: .2s;
 }
 
-.type-btn:nth-child(6) {
-    grid-column: 5 / span 3;
+.types-more:hover,
+.types-more[aria-expanded="true"] {
+    background: color-mix(in srgb, var(--card) 55%, transparent);
 }
 
-.type-btn:nth-child(7) {
-    grid-column: 8 / span 3;
+.types-more .type-arrow {
+    display: grid;
+    width: 18px;
+    height: 18px;
+    place-items: center;
+}
+
+.types-more .type-arrow svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2;
+}
+
+.types-overflow {
+    position: absolute;
+    z-index: 10;
+    top: calc(100% + 7px);
+    right: 0;
+    display: none;
+    min-width: 176px;
+    padding: 6px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 12px 28px var(--shadow);
+}
+
+.types-overflow.open {
+    display: block;
+}
+
+.types-overflow .type-btn {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 9px;
+    min-height: 40px;
+    padding: 7px 11px;
+    text-align: left;
+    justify-content: flex-start;
+}
+
+.types-overflow .type-btn .type-icon {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    margin: 0;
+}
+
+.types-overflow .type-icon svg {
+    width: 17px;
+    height: 17px;
 }
 
 .mode {
@@ -1357,15 +1460,34 @@ footer {
     }
 
     .types {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        grid-template-columns: repeat(5, minmax(0, 1fr)) 34px;
+        gap: 2px;
+        padding: 4px;
     }
 
-    .type-btn,
-    .type-btn:nth-child(5),
-    .type-btn:nth-child(6),
-    .type-btn:nth-child(7) {
-        grid-column: auto !important;
-        padding-inline: 6px;
+    .type-btn {
+        gap: 4px;
+        min-height: 38px;
+        padding: 6px 3px;
+        font-size: 10px;
+    }
+
+    .type-btn .type-icon {
+        flex-basis: 25px;
+        width: 25px;
+        height: 25px;
+        border-radius: 7px;
+    }
+
+    .type-icon svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .types-more {
+        flex-basis: 34px;
+        width: 34px;
+        min-height: 38px;
     }
 
     .input-row {
@@ -1546,13 +1668,32 @@ footer {
                 </div>
 
                 <div class="types">
-                    <button class="type-btn active" data-mode="url"><span class="type-icon">◎</span>Website</button>
-                    <button class="type-btn" data-mode="whatsapp"><span class="type-icon">◌</span>WhatsApp</button>
-                    <button class="type-btn" data-mode="email"><span class="type-icon">✉</span>Email</button>
-                    <button class="type-btn" data-mode="sms"><span class="type-icon">◍</span>SMS</button>
-                    <button class="type-btn" data-mode="wifi"><span class="type-icon">⌁</span>Wi-Fi</button>
-                    <button class="type-btn" data-mode="contact"><span class="type-icon">♙</span>Contact</button>
-                    <button class="type-btn" data-mode="calendar"><span class="type-icon">□</span>Calendar</button>
+                    <button class="type-btn active" data-mode="url">
+                        <span class="type-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9S9.5 5.5 12 3z"></path></svg></span>Website
+                    </button>
+                    <button class="type-btn" data-mode="whatsapp">
+                        <span class="type-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 19l1.4-3.1A7.8 7.8 0 1 1 8.2 18z"></path><path d="M9.5 9.2c.3 1.5 1.3 2.6 2.8 3.5l1 .4c.4.1.8-.1 1-.5l.3-.7"></path></svg></span>WhatsApp
+                    </button>
+                    <button class="type-btn" data-mode="email">
+                        <span class="type-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m4 7 8 6 8-6"></path></svg></span>Email
+                    </button>
+                    <button class="type-btn" data-mode="sms">
+                        <span class="type-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 3z"></path><path d="M8 9h8M8 12h5"></path></svg></span>SMS
+                    </button>
+                    <button class="type-btn" data-mode="wifi">
+                        <span class="type-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.5 9.5a13 13 0 0 1 17 0M6.5 13a8.5 8.5 0 0 1 11 0M9.5 16.5a4 4 0 0 1 5 0"></path><circle cx="12" cy="20" r="1"></circle></svg></span>Wi-Fi
+                    </button>
+                    <button class="types-more" type="button" aria-label="Show more QR types" aria-expanded="false">
+                        <span class="type-arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></span>
+                    </button>
+                    <div class="types-overflow">
+                        <button class="type-btn" data-mode="contact">
+                            <span class="type-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"></circle><path d="M6 19a6 6 0 0 1 12 0M4 4h16v16H4z"></path></svg></span>Contact
+                        </button>
+                        <button class="type-btn" data-mode="calendar">
+                            <span class="type-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"></rect><path d="M8 3v4M16 3v4M4 10h16M8 14h2M12 14h2M16 14h1"></path></svg></span>Calendar
+                        </button>
+                    </div>
                 </div>
 
                 <!-- URL -->
@@ -1918,6 +2059,16 @@ themeBtn.addEventListener("click", () => {
 let currentMode = "url";
 let currentPayload = "";
 let currentQRImage = "";
+const typesMore = document.querySelector(".types-more");
+const typesOverflow = document.querySelector(".types-overflow");
+
+typesMore.addEventListener("click", event => {
+    event.stopPropagation();
+    const expanded = typesMore.getAttribute("aria-expanded") === "true";
+    typesMore.setAttribute("aria-expanded", String(!expanded));
+    typesOverflow.classList.toggle("open", !expanded);
+});
+
 document.querySelectorAll(".type-btn").forEach(button => {
     button.addEventListener("click", () => {
         document.querySelectorAll(".type-btn").forEach(b => b.classList.remove("active"));
@@ -1927,7 +2078,14 @@ document.querySelectorAll(".type-btn").forEach(button => {
 
         document.querySelectorAll(".mode").forEach(mode => mode.classList.remove("active"));
         document.getElementById(currentMode + "Mode").classList.add("active");
+        typesMore.setAttribute("aria-expanded", "false");
+        typesOverflow.classList.remove("open");
     });
+});
+
+document.addEventListener("click", () => {
+    typesMore.setAttribute("aria-expanded", "false");
+    typesOverflow.classList.remove("open");
 });
 
 /* URL */
