@@ -22,20 +22,30 @@ interface and a Python image-generation service.
 QR-Code-Generator--Using-Streamlit-main/
 ├── app.py                         # Streamlit entrypoint
 ├── frontend/
-│   └── index.html                 # UI, styles, and browser interactions
+│   ├── index.html                 # Page structure and UI markup
+│   ├── css/
+│   │   └── styles.css             # Layout, themes, components, and responsive styles
+│   ├── js/
+│   │   └── app.js                 # UI interactions and Streamlit component messaging
+│   └── img/
+│       └── hero-qr.png            # Decorative QR artwork used in the hero section
 ├── qr_studio/
 │   ├── api/
+│   │   ├── __init__.py
 │   │   └── qr_api.py              # Request validation and response boundary
 │   ├── ui/
+│   │   ├── __init__.py
 │   │   ├── component.py           # Streamlit component declaration
 │   │   └── styles.py              # Streamlit shell styles
+│   ├── __init__.py
 │   ├── config.py                  # Environment-backed settings
 │   ├── errors.py                  # Expected application errors
 │   ├── qr_generator.py            # QR image generation and logo handling
 │   └── state.py                   # Session-state access
 ├── .env.example                   # Optional local configuration template
-├── requirements.txt
-└── README.md
+├── .gitignore                     # Files excluded from Git
+├── requirements.txt               # Python dependencies
+└── README.md                      # Project documentation
 ```
 
 ## Run locally
