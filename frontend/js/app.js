@@ -11,9 +11,20 @@ const primaryNav = document.getElementById("primaryNav");
 const navToggle = document.getElementById("navToggle");
 const navLinks = Array.from(primaryNav.querySelectorAll("a"));
 const navSections = Array.from(document.querySelectorAll("[data-nav-section]"));
+const header = document.querySelector("header");
+const progressBar = document.querySelector(".scroll-progress span");
 
 if ("scrollRestoration" in window.history) {
     window.history.scrollRestoration = "manual";
+}
+
+function updateScrollChrome() {
+    const scrollTop = Math.max(document.body.scrollTop || window.scrollY, 0);
+    header.classList.toggle("is-scrolled", scrollTop > 24);
+
+    const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = scrollableHeight > 0 ? scrollTop / scrollableHeight : 0;
+    progressBar.style.transform = `scaleX(${Math.min(progress, 1)})`;
 }
 
 function closeNavMenu() {
@@ -70,7 +81,7 @@ function setActiveNav(sectionId) {
 
 function updateActiveNav() {
     const marker =
-        document.querySelector("header").getBoundingClientRect().bottom + 28;
+        header.getBoundingClientRect().bottom + 28;
 
     let currentSection = navSections[0];
 
@@ -95,7 +106,13 @@ function scrollToHash(behavior = "instant") {
     setActiveNav(target.id);
 }
 
-window.addEventListener("scroll", updateActiveNav, { passive: true });
+function handleScroll() {
+    updateScrollChrome();
+    updateActiveNav();
+}
+
+window.addEventListener("scroll", handleScroll, { passive: true });
+document.body.addEventListener("scroll", handleScroll, { passive: true });
 
 function restoreHashScroll() {
     window.setTimeout(() => scrollToHash("instant"), 50);
@@ -109,6 +126,7 @@ window.addEventListener("resize", () => {
         closeNavMenu();
     }
     updateActiveNav();
+    updateScrollChrome();
 });
 
 document.addEventListener("keydown", (event) => {
@@ -120,6 +138,22 @@ if (window.location.hash) {
 } else {
     updateActiveNav();
 }
+updateScrollChrome();
+
+const revealTargets = document.querySelectorAll(
+    ".hero, .workspace, .info-section, .how-section, .faq-section"
+);
+const revealObserver = new IntersectionObserver(
+    (entries, observer) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+        });
+    },
+    { threshold: 0.08 }
+);
+revealTargets.forEach((target) => revealObserver.observe(target));
 
 /* Logo upload and preview */
 const logoPreview = document.getElementById("logoPreview");

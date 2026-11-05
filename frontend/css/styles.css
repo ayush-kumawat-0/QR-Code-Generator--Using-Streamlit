@@ -37,7 +37,33 @@ body.dark {
 }
 
 html {
-    scroll-behavior: smooth
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) transparent;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    width: 6px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-dark);
+    background-clip: padding-box;
 }
 
 body {
@@ -3063,6 +3089,194 @@ body {
     max-height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
+}
+
+/* Portfolio-inspired motion and navigation states. */
+header {
+    top: 0;
+    width: 100%;
+    margin-inline: 0;
+    background: transparent;
+    border-color: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    transition:
+        top .35s ease,
+        width .35s ease,
+        margin .35s ease,
+        padding .35s ease,
+        background .35s ease,
+        border-color .35s ease,
+        border-radius .35s ease,
+        box-shadow .35s ease,
+        backdrop-filter .35s ease;
+}
+
+header.is-scrolled {
+    top: 8px;
+    width: calc(100% - 20px);
+    margin-inline: auto;
+    padding-inline: 14px;
+    background: color-mix(in srgb, var(--card) 86%, transparent);
+    border-color: color-mix(in srgb, var(--border) 80%, transparent);
+    border-radius: 18px;
+    box-shadow: 0 14px 40px color-mix(in srgb, var(--shadow) 82%, transparent);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+.scroll-progress {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 200;
+    height: 3px;
+    pointer-events: none;
+}
+
+.scroll-progress span {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transform: scaleX(0);
+    transform-origin: left center;
+    background: linear-gradient(90deg, var(--accent-dark), var(--accent), #ef8b4a);
+    transition: transform .12s linear;
+}
+
+.hero,
+.workspace,
+.info-section,
+.how-section,
+.faq-section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity .7s ease, transform .7s ease;
+}
+
+.hero.is-visible,
+.workspace.is-visible,
+.info-section.is-visible,
+.how-section.is-visible,
+.faq-section.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+body {
+    font-size: 16px;
+}
+
+.brand-name {
+    font-size: 20px;
+}
+
+.nav-links a {
+    font-size: 13px;
+}
+
+.theme-btn,
+.history-btn {
+    font-size: 13px;
+}
+
+.hero p {
+    font-size: 17px;
+}
+
+.hero-points {
+    font-size: 13px;
+}
+
+.title {
+    font-size: 22px;
+}
+
+.subtitle {
+    font-size: 14px;
+}
+
+label {
+    font-size: 12px;
+}
+
+input[type="url"],
+input[type="text"],
+input[type="tel"],
+textarea {
+    font-size: 15px;
+}
+
+.primary {
+    font-size: 14px;
+}
+
+.helper,
+.paste {
+    font-size: 12px;
+}
+
+@media (max-width: 820px) {
+    .hero p {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 600px) {
+    header.is-scrolled {
+        top: 8px;
+        padding-inline: 9px;
+    }
+
+    .brand-name {
+        font-size: 16px;
+    }
+
+    .hero p {
+        font-size: 14px;
+    }
+}
+
+body.dark .float-chip {
+    color: #24211d;
+    background: rgba(255, 253, 248, .97);
+    border-color: rgba(255, 255, 255, .24);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .28);
+}
+
+body.dark .chip-whatsapp {
+    color: #123b27;
+    background: rgba(224, 250, 235, .98);
+}
+
+body.dark .chip-email {
+    color: #4a2b1d;
+    background: rgba(255, 237, 225, .98);
+}
+
+body.dark .chip-wifi {
+    color: #3d2c1e;
+    background: rgba(255, 240, 226, .98);
+}
+
+body.dark .chip-contact {
+    color: #342b20;
+    background: rgba(247, 239, 227, .98);
+}
+
+body.dark .chip-calendar {
+    color: #4a2c20;
+    background: rgba(255, 239, 230, .98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    header,
+    .hero,
+    .workspace,
+    .info-section,
+    .how-section,
+    .faq-section {
+        transition: none;
+    }
 }
 
 
